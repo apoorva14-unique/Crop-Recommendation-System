@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Crop Recommendation System</title>
+
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <main class="container">
+
+        <header class="page-header">
+            <div class="logo">🌾</div>
+            <h1>Crop Recommendation System</h1>
+            <p class="subtitle">
+                Discover a suitable crop based on your soil and climate conditions.
+            </p>
+        </header>
+
+        <section class="form-section">
+            <h2>Enter Soil & Climate Details</h2>
+            <p class="section-description">
+                Fill in all eight values to get a crop recommendation.
+            </p>
+
+            <form action="/predict" method="post">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label for="N">Nitrogen (N)</label>
+                        <input type="number" id="N" name="N"
+                               step="any" min="0"
+                               placeholder="e.g. 90" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="P">Phosphorus (P)</label>
+                        <input type="number" id="P" name="P"
+                               step="any" min="0"
+                               placeholder="Enter phosphorus value" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="K">Potassium (K)</label>
+                        <input type="number" id="K" name="K"
+                               step="any" min="0"
+                               placeholder="Enter potassium value" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="temperature">Temperature (°C)</label>
+                        <input type="number" id="temperature"
+                               name="temperature" step="any"
+                               placeholder="e.g. 28.5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="humidity">Humidity (%)</label>
+                        <input type="number" id="humidity"
+                               name="humidity" step="any"
+                               min="0" max="100"
+                               placeholder="e.g. 70" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ph">Soil pH</label>
+                        <input type="number" id="ph" name="ph"
+                               step="any" min="0" max="14"
+                               placeholder="e.g. 6.5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rainfall">Rainfall (mm)</label>
+                        <input type="number" id="rainfall"
+                               name="rainfall" step="any" min="0"
+                               placeholder="Enter rainfall" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ec">Electrical Conductivity (EC)</label>
+                        <input type="number" id="ec" name="ec"
+                               step="any" min="0"
+                               placeholder="Enter EC value" required>
+                    </div>
+
+                </div>
+
+                <button type="submit" class="predict-button">
+                    🌱 Predict Suitable Crop
+                </button>
+
+            </form>
+        </section>
+
+        {% if prediction %}
+        <section class="result" aria-live="polite">
+
+            {% if input_data %}
+                <p class="result-label">Your recommended crop</p>
+                <h2 class="crop-name">🌱 {{ prediction }}</h2>
+                <p class="result-description">
+                    The model has generated this recommendation
+                    from the values you provided.
+                </p>
+
+                <h3>Submitted Soil & Climate Values</h3>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in input_data.items() %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>{{ value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="error-message">{{ prediction }}</p>
+            {% endif %}
+
+        </section>
+        {% endif %}
+
+        <footer class="page-footer">
+            <p>Crop Recommendation System</p>
+            <p>Recommendations depend on the quality of the dataset and model.</p>
+        </footer>
+
+    </main>
+</body>
+</html>
